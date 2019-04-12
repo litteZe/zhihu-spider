@@ -1,12 +1,12 @@
 const model = require('./model')
-const Question = model.getModel('question')
+const Question = model.getModel('vczh')
 const axios = require('axios')
 async function spider() {
     for (let n = 0, isEnd = false; isEnd == false; n = n + 20) {
         console.log('进入循环', n)
         let res = await request(n);
         // console.log(res)
-        // save(res)
+       
         let { data, paging } = res.data;
         isEnd = paging.is_end;
         console.log(isEnd)
@@ -15,10 +15,13 @@ async function spider() {
             const questionInstance = new Question({ ...item });
             await questionInstance.save();
             console.log('插入成功')
+            await new Promise(rsv => {
+                setTimeout(rsv, 200)
+            })
         }
         
             await new Promise(rsv => {
-                setTimeout(rsv, 2000)
+                setTimeout(rsv, 10000)
             })
         }
 }
@@ -26,7 +29,7 @@ async function spider() {
 
 function request(num) {
 
-    return axios.get(`https://www.zhihu.com/api/v4/members/gao-ze-rong-69/following-questions?include=data%5B*%5D.created%2Canswer_count%2Cfollower_count%2Cauthor&offset=${num}&limit=20`)
+    return axios.get(`https://www.zhihu.com/api/v4/members/excited-vczh/following-questions?include=data%5B*%5D.created%2Canswer_count%2Cfollower_count%2Cauthor&offset=${num}&limit=20`)
         // .then((res) => {
         //     let { data, paging } = res.data;
         //     isEnd = paging.is_end;
@@ -48,9 +51,5 @@ function request(num) {
     // console.log(tm2-tm1)
 }
 
-// for (let n = 0;n<60; n=n+20) {
-//     console.log('进入循环',n)
 
-//    request(n)
-// }
 spider()
